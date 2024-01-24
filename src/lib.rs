@@ -82,7 +82,7 @@ impl Novu {
         })
     }
 
-    pub async fn trigger(self, data: TriggerPayload) -> Result<TriggerResponse, NovuError> {
+    pub async fn trigger(&self, data: TriggerPayload) -> Result<TriggerResponse, NovuError> {
         let result = self.client.post("/events/trigger", Some(&data)).await?;
 
         match result {
