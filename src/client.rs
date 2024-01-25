@@ -80,12 +80,7 @@ impl Client {
         let res = self.client.get(self.get_url(endpoint)).send().await;
 
         match res {
-            // Ok(response) => Ok(response.json::<Response<T>>().await?),
-            Ok(response) => {
-                let json = response.json::<serde_json::Value>().await?;
-                dbg!(&json);
-                Ok(serde_json::from_value::<Response<T>>(json).unwrap())
-            }
+            Ok(response) => Ok(response.json::<Response<T>>().await?),
             Err(err) => Err(NovuError::HttpError(err)),
         }
     }
@@ -115,12 +110,7 @@ impl Client {
             .await;
 
         match res {
-            Ok(response) => {
-                // let json = response.json::<serde_json::Value>().await?;
-                // dbg!(&json);
-                // Ok(serde_json::from_value::<Response<T>>(json).unwrap())
-                Ok(response.json::<Response<T>>().await?)
-            }
+            Ok(response) => Ok(response.json::<Response<T>>().await?),
             Err(err) => Err(NovuError::HttpError(err)),
         }
     }

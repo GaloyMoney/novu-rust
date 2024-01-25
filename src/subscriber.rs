@@ -1,4 +1,5 @@
 use serde::{Deserialize, Serialize};
+use std::collections::HashMap;
 
 use crate::{
     client::{Client, Response},
@@ -27,51 +28,63 @@ pub struct SubscribersResponse {
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct UpdateSubscriberResponse {
-    #[serde(rename = "__v")]
-    pub version: Option<String>,
-    #[serde(rename = "_environmentId")]
-    pub environment_id: String,
+    #[serde(rename = "_id")]
     pub id: Option<String>,
     #[serde(rename = "_organizationId")]
-    pub organization_id: String,
-    // pub avatar: Option<String>,
-    pub channels: Vec<Channel>,
-    pub created_at: String,
+    pub organization_id: Option<String>,
+    #[serde(rename = "_environmentId")]
+    pub environment_id: Option<String>,
+    pub channels: Option<Vec<HashMap<String, serde_json::Value>>>,
     pub deleted: bool,
-    pub email: Option<String>,
+    #[serde(rename = "createdAt")]
+    pub created_at: Option<String>,
+    #[serde(rename = "firstName")]
     pub first_name: Option<String>,
-    // pub is_online: Option<bool>,
+    #[serde(rename = "lastName")]
     pub last_name: Option<String>,
-    // #[serde(rename = "lastOnlineAt")]
-    // pub last_online_at: Option<String>,
-    // pub locale: Option<String>,
-    // pub phone: Option<String>,
     #[serde(rename = "subscriberId")]
-    pub subscriber_id: String,
-    pub updated_at: String,
-    pub _id: String,
+    pub subscriber_id: Option<String>,
+    pub avatar: Option<String>,
+    pub email: Option<String>,
+    #[serde(rename = "lastOnlineAt")]
+    pub last_online_at: Option<String>,
+    pub locale: Option<String>,
+    pub phone: Option<String>,
+    #[serde(rename = "updatedAt")]
+    pub updated_at: Option<String>,
+    #[serde(rename = "__v")]
+    pub version: Option<i64>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-pub struct Channel {
-    #[serde(rename = "_integrationId")]
-    pub integration_id: String,
-    pub credentials: ChannelCredentials,
-    #[serde(rename = "integrationIdentifier")]
-    pub integration_identifier: String,
-    #[serde(rename = "providerId")]
-    pub provider_id: String,
+pub struct GetSubscriberResponse {
+    #[serde(rename = "_id")]
+    pub id: Option<String>,
+    #[serde(rename = "_organizationId")]
+    pub organization_id: Option<String>,
+    #[serde(rename = "_environmentId")]
+    pub environment_id: Option<String>,
+    pub channels: Option<Vec<HashMap<String, serde_json::Value>>>,
+    pub deleted: bool,
+    #[serde(rename = "createdAt")]
+    pub created_at: Option<String>,
+    #[serde(rename = "firstName")]
+    pub first_name: Option<String>,
+    #[serde(rename = "lastName")]
+    pub last_name: Option<String>,
+    #[serde(rename = "subscriberId")]
+    pub subscriber_id: Option<String>,
+    pub avatar: Option<String>,
+    pub email: Option<String>,
+    #[serde(rename = "lastOnlineAt")]
+    pub last_online_at: Option<String>,
+    pub locale: Option<String>,
+    pub phone: Option<String>,
+    #[serde(rename = "updatedAt")]
+    pub updated_at: Option<String>,
+    #[serde(rename = "__v")]
+    pub version: Option<i64>,
 }
-
-#[derive(Debug, Serialize, Deserialize)]
-pub struct ChannelCredentials {
-    pub channel: String,
-    #[serde(rename = "deviceTokens")]
-    pub device_tokens: Vec<String>,
-    #[serde(rename = "webhookUrl")]
-    pub webhook_url: String,
-}
-
 pub struct Subscribers {
     client: Client,
 }
@@ -97,6 +110,20 @@ impl Subscribers {
     //     let response = self.client.post(&url).json(&data).send().await?;
     //     Ok(response)
     // }
+
+    pub async fn get_subscriber(
+        &self,
+        subscriber_id: String,
+    ) -> Result<GetSubscriberResponse, NovuError> {
+        let endpoint = format!("/subscribers/{}", subscriber_id);
+        let result = self.client.get(endpoint).await?;
+
+        match result {
+            crate::client::Response::Success(data) => Ok(data.data),
+            crate::client::Response::Error(err) => todo!("{:?}", err),
+            crate::client::Response::Messages(err) => todo!("{:?}", err),
+        }
+    }
 
     pub async fn update(
         &self,
