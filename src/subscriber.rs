@@ -39,6 +39,7 @@ pub struct CreateSubscriberPayload {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct UpdateSubscriberResponse {
     #[serde(rename = "_id")]
     pub id: Option<String>,
@@ -48,21 +49,15 @@ pub struct UpdateSubscriberResponse {
     pub environment_id: Option<String>,
     pub channels: Option<Vec<HashMap<String, serde_json::Value>>>,
     pub deleted: bool,
-    #[serde(rename = "createdAt")]
     pub created_at: Option<String>,
-    #[serde(rename = "firstName")]
     pub first_name: Option<String>,
-    #[serde(rename = "lastName")]
     pub last_name: Option<String>,
-    #[serde(rename = "subscriberId")]
     pub subscriber_id: Option<String>,
     pub avatar: Option<String>,
     pub email: Option<String>,
-    #[serde(rename = "lastOnlineAt")]
     pub last_online_at: Option<String>,
     pub locale: Option<String>,
     pub phone: Option<String>,
-    #[serde(rename = "updatedAt")]
     pub updated_at: Option<String>,
     #[serde(rename = "__v")]
     pub version: Option<i64>,
@@ -70,6 +65,7 @@ pub struct UpdateSubscriberResponse {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct GetSubscriberResponse {
     #[serde(rename = "_id")]
     pub id: Option<String>,
@@ -79,21 +75,15 @@ pub struct GetSubscriberResponse {
     pub environment_id: Option<String>,
     pub channels: Option<Vec<HashMap<String, serde_json::Value>>>,
     pub deleted: bool,
-    #[serde(rename = "createdAt")]
     pub created_at: Option<String>,
-    #[serde(rename = "firstName")]
     pub first_name: Option<String>,
-    #[serde(rename = "lastName")]
     pub last_name: Option<String>,
-    #[serde(rename = "subscriberId")]
     pub subscriber_id: Option<String>,
     pub avatar: Option<String>,
     pub email: Option<String>,
-    #[serde(rename = "lastOnlineAt")]
     pub last_online_at: Option<String>,
     pub locale: Option<String>,
     pub phone: Option<String>,
-    #[serde(rename = "updatedAt")]
     pub updated_at: Option<String>,
     #[serde(rename = "__v")]
     pub version: Option<i64>,
@@ -101,6 +91,7 @@ pub struct GetSubscriberResponse {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct CreateSubscriberResponse {
     #[serde(rename = "_id")]
     pub id: Option<String>,
@@ -110,21 +101,61 @@ pub struct CreateSubscriberResponse {
     pub environment_id: Option<String>,
     pub channels: Option<Vec<HashMap<String, serde_json::Value>>>,
     pub deleted: bool,
-    #[serde(rename = "createdAt")]
     pub created_at: Option<String>,
-    #[serde(rename = "firstName")]
     pub first_name: Option<String>,
-    #[serde(rename = "lastName")]
     pub last_name: Option<String>,
-    #[serde(rename = "subscriberId")]
     pub subscriber_id: Option<String>,
     pub avatar: Option<String>,
     pub email: Option<String>,
-    #[serde(rename = "lastOnlineAt")]
     pub last_online_at: Option<String>,
     pub locale: Option<String>,
     pub phone: Option<String>,
-    #[serde(rename = "updatedAt")]
+    pub updated_at: Option<String>,
+    #[serde(rename = "__v")]
+    pub version: Option<i64>,
+    pub data: Option<HashMap<String, serde_json::Value>>,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct UpdateCredentialsPayload {
+    pub provider_id: String,
+    pub integration_identifier: Option<String>,
+    pub credentials: Credentials,
+}
+#[derive(Debug, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct Credentials {
+    pub webhook_url: String,
+    pub channel: Option<String>,
+    pub device_tokens: Option<Vec<String>>,
+    pub title: Option<String>,
+    pub image_url: Option<String>,
+    pub alert_uid: Option<String>,
+    pub state: Option<String>,
+    pub external_url: Option<String>,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct UpdateCredentialsResponse {
+    #[serde(rename = "_id")]
+    pub id: Option<String>,
+    #[serde(rename = "_organizationId")]
+    pub organization_id: Option<String>,
+    #[serde(rename = "_environmentId")]
+    pub environment_id: Option<String>,
+    pub channels: Option<Vec<HashMap<String, serde_json::Value>>>,
+    pub deleted: bool,
+    pub created_at: Option<String>,
+    pub first_name: Option<String>,
+    pub last_name: Option<String>,
+    pub subscriber_id: Option<String>,
+    pub avatar: Option<String>,
+    pub email: Option<String>,
+    pub last_online_at: Option<String>,
+    pub locale: Option<String>,
+    pub phone: Option<String>,
     pub updated_at: Option<String>,
     #[serde(rename = "__v")]
     pub version: Option<i64>,
@@ -188,6 +219,20 @@ impl Subscribers {
         let endpoint = "/subscribers/".to_string();
         let result = self.client.post(endpoint, Some(&data)).await?;
 
+        match result {
+            crate::client::Response::Success(data) => Ok(data.data),
+            crate::client::Response::Error(err) => todo!("{:?}", err),
+            crate::client::Response::Messages(err) => todo!("{:?}", err),
+        }
+    }
+
+    pub async fn update_credentials(
+        &self,
+        subscriber_id: String,
+        data: UpdateCredentialsPayload,
+    ) -> Result<UpdateCredentialsResponse, NovuError> {
+        let endpoint = format!("/subscribers/{}/credentials", subscriber_id);
+        let result = self.client.put(endpoint, &data).await?;
         match result {
             crate::client::Response::Success(data) => Ok(data.data),
             crate::client::Response::Error(err) => todo!("{:?}", err),
