@@ -85,6 +85,7 @@ pub struct GetSubscriberResponse {
     #[serde(rename = "__v")]
     pub version: Option<i64>,
 }
+
 pub struct Subscribers {
     client: Client,
 }
