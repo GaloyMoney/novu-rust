@@ -25,6 +25,7 @@ use inbound_parse::InboundParse;
 use layouts::Layouts;
 use messages::Messages;
 use serde::{Deserialize, Serialize};
+use subscriber::Subscribers;
 use workflows::Workflows;
 
 #[derive(PartialEq, Eq, PartialOrd, Serialize, Deserialize, Debug)]
@@ -63,6 +64,7 @@ pub struct Novu {
     pub layouts: Layouts,
     pub messages: Messages,
     pub workflows: Workflows,
+    pub subscribers: Subscribers,
 }
 
 impl Novu {
@@ -72,6 +74,7 @@ impl Novu {
         let layouts = Layouts::new(client.clone_client());
         let messages = Messages::new(client.clone_client());
         let workflows = Workflows::new(client.clone_client());
+        let subscribers = Subscribers::new(client.clone_client());
 
         Ok(Self {
             client,
@@ -79,6 +82,7 @@ impl Novu {
             layouts,
             messages,
             workflows,
+            subscribers,
         })
     }
 

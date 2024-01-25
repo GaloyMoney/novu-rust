@@ -120,16 +120,25 @@ impl Client {
         endpoint: impl ToString,
         data: Option<&impl Serialize>,
     ) -> Result<Response<T>, NovuError> {
-        let res = self
-            .client
-            .patch(self.get_url(endpoint))
-            .json(&data)
-            .send()
-            .await;
+        if data.is_none() {
+            let res = self.client.patch(self.get_url(endpoint)).send().await;
 
-        match res {
-            Ok(response) => Ok(response.json::<Response<T>>().await?),
-            Err(err) => Err(NovuError::HttpError(err)),
+            match res {
+                Ok(response) => Ok(response.json::<Response<T>>().await?),
+                Err(err) => Err(NovuError::HttpError(err)),
+            }
+        } else {
+            let res = self
+                .client
+                .patch(self.get_url(endpoint))
+                .json(&data.unwrap())
+                .send()
+                .await;
+
+            match res {
+                Ok(response) => Ok(response.json::<Response<T>>().await?),
+                Err(err) => Err(NovuError::HttpError(err)),
+            }
         }
     }
 
