@@ -30,6 +30,8 @@ pub enum Response<T> {
     Error(ApiError),
     Messages(ApiErrorWithMessages),
 }
+
+#[derive(Clone)]
 pub struct Client {
     api_url: String,
     client: reqwest::Client,

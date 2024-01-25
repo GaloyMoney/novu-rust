@@ -132,6 +132,7 @@ pub struct DelMsgTransPayload {
     pub channel: Option<ChannelTypeEnum>,
 }
 
+#[derive(Clone)]
 pub struct Messages {
     client: Client,
 }

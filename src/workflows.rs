@@ -8,6 +8,7 @@ use crate::{
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
 
+#[derive(Clone)]
 pub struct Workflows {
     client: Client,
 }

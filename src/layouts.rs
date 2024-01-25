@@ -61,6 +61,7 @@ pub struct LayoutResponse {
     pub total_count: i32,
 }
 
+#[derive(Clone)]
 pub struct Layouts {
     client: Client,
 }

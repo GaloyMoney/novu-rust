@@ -131,6 +131,7 @@ pub struct CreateSubscriberResponse {
     pub data: Option<HashMap<String, serde_json::Value>>,
 }
 
+#[derive(Clone)]
 pub struct Subscribers {
     client: Client,
 }

@@ -25,6 +25,7 @@ pub struct Feed {
     pub _organization_id: String,
 }
 
+#[derive(Clone)]
 pub struct Feeds {
     client: Client,
 }

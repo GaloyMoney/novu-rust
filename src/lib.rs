@@ -58,6 +58,7 @@ pub struct IAttachmentOptions {
     pub channels: Option<Vec<ChannelTypeEnum>>,
 }
 
+#[derive(Clone)]
 pub struct Novu {
     client: Client,
     pub feeds: Feeds,
