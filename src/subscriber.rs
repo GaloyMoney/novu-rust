@@ -119,10 +119,30 @@ pub struct CreateSubscriberResponse {
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct UpdateCredentialsPayload {
-    pub provider_id: String,
+    pub provider_id: ProviderId,
     pub integration_identifier: Option<String>,
     pub credentials: Credentials,
 }
+
+#[derive(Debug, Deserialize)]
+pub enum ProviderId {
+    Slack,
+    Discord,
+    MsTeams,
+    Mattermost,
+    Ryver,
+    Zulip,
+    GrafanaOnCall,
+    Getstream,
+    Fcm,
+    Apns,
+    Expo,
+    OneSignal,
+    Pushpad,
+    PushWebhook,
+    PusherBeam,
+}
+
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Credentials {
@@ -160,6 +180,31 @@ pub struct UpdateCredentialsResponse {
     #[serde(rename = "__v")]
     pub version: Option<i64>,
     pub data: Option<HashMap<String, serde_json::Value>>,
+}
+
+impl serde::Serialize for ProviderId {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        serializer.serialize_str(match self {
+            ProviderId::Slack => "slack",
+            ProviderId::Discord => "discord",
+            ProviderId::MsTeams => "msteams",
+            ProviderId::Mattermost => "mattermost",
+            ProviderId::Ryver => "ryver",
+            ProviderId::Zulip => "zulip",
+            ProviderId::GrafanaOnCall => "grafana-on-call",
+            ProviderId::Getstream => "getstream",
+            ProviderId::Fcm => "fcm",
+            ProviderId::Apns => "apns",
+            ProviderId::Expo => "expo",
+            ProviderId::OneSignal => "one-signal",
+            ProviderId::Pushpad => "pushpad",
+            ProviderId::PushWebhook => "push-webhook",
+            ProviderId::PusherBeam => "pusher-beam",
+        })
+    }
 }
 
 #[derive(Clone)]
