@@ -19,6 +19,6 @@ pub enum NovuError {
     InvalidValues(String, String),
     #[error("couldn't find template '{0}'")]
     TemplateNotFound(String),
-    #[error("{0}")]
-    Unknown(String),
+    #[error("NovuError - UnexpectedResponse: {code:?} - {msg:?}")]
+    UnexpectedResponse { msg: String, code: String },
 }

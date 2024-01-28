@@ -223,8 +223,14 @@ impl Subscribers {
 
         match result {
             crate::client::Response::Success(data) => Ok(data.data),
-            crate::client::Response::Error(err) => todo!("{:?}", err),
-            crate::client::Response::Messages(err) => todo!("{:?}", err),
+            crate::client::Response::Error(err) => Err(NovuError::UnexpectedResponse {
+                msg: err.message,
+                code: err.status_code.to_string(),
+            }),
+            crate::client::Response::Messages(err) => Err(NovuError::UnexpectedResponse {
+                msg: format!("{:?}", err.message),
+                code: err.status_code.to_string(),
+            }),
         }
     }
 
@@ -237,8 +243,14 @@ impl Subscribers {
 
         match result {
             crate::client::Response::Success(data) => Ok(data.data),
-            crate::client::Response::Error(err) => todo!("{:?}", err),
-            crate::client::Response::Messages(err) => todo!("{:?}", err),
+            crate::client::Response::Error(err) => Err(NovuError::UnexpectedResponse {
+                msg: err.message,
+                code: err.status_code.to_string(),
+            }),
+            crate::client::Response::Messages(err) => Err(NovuError::UnexpectedResponse {
+                msg: format!("{:?}", err.message),
+                code: err.status_code.to_string(),
+            }),
         }
     }
 
@@ -252,8 +264,14 @@ impl Subscribers {
 
         match result {
             crate::client::Response::Success(data) => Ok(data.data),
-            crate::client::Response::Error(err) => todo!("{:?}", err),
-            crate::client::Response::Messages(err) => todo!("{:?}", err),
+            crate::client::Response::Error(err) => Err(NovuError::UnexpectedResponse {
+                msg: err.message,
+                code: err.status_code.to_string(),
+            }),
+            crate::client::Response::Messages(err) => Err(NovuError::UnexpectedResponse {
+                msg: format!("{:?}", err.message),
+                code: err.status_code.to_string(),
+            }),
         }
     }
 
@@ -266,8 +284,14 @@ impl Subscribers {
 
         match result {
             crate::client::Response::Success(data) => Ok(data.data),
-            crate::client::Response::Error(err) => todo!("{:?}", err),
-            crate::client::Response::Messages(err) => todo!("{:?}", err),
+            crate::client::Response::Error(err) => Err(NovuError::UnexpectedResponse {
+                msg: err.message,
+                code: err.status_code.to_string(),
+            }),
+            crate::client::Response::Messages(err) => Err(NovuError::UnexpectedResponse {
+                msg: format!("{:?}", err.message),
+                code: err.status_code.to_string(),
+            }),
         }
     }
 
@@ -280,8 +304,14 @@ impl Subscribers {
         let result = self.client.put(endpoint, &data).await?;
         match result {
             crate::client::Response::Success(data) => Ok(data.data),
-            crate::client::Response::Error(err) => todo!("{:?}", err),
-            crate::client::Response::Messages(err) => todo!("{:?}", err),
+            crate::client::Response::Error(err) => Err(NovuError::UnexpectedResponse {
+                msg: err.message,
+                code: err.status_code.to_string(),
+            }),
+            crate::client::Response::Messages(err) => Err(NovuError::UnexpectedResponse {
+                msg: format!("{:?}", err.message),
+                code: err.status_code.to_string(),
+            }),
         }
     }
 }

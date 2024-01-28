@@ -91,23 +91,15 @@ impl Novu {
         let result = self.client.post("/events/trigger", Some(&data)).await?;
 
         match result {
-            client::Response::Success(data) => Ok(data.data),
-            client::Response::Error(err) => match err.status_code {
-                422 => Err(match err.message.as_str() {
-                    "TEMPLATE_NOT_FOUND" => NovuError::TemplateNotFound(data.name.to_string()),
-                    _ => NovuError::Unknown("".to_string()),
-                }),
-                401 => Err(NovuError::UnauthorizedError("/events/trigger".to_string())),
-                400 => {
-                    println!("{:?}", err);
-                    todo!()
-                }
-                code => todo!("{}", code),
-            },
-            client::Response::Messages(err) => Err(NovuError::InvalidValues(
-                "triggering".to_string(),
-                format!("{:?}", err.message),
-            )),
+            crate::client::Response::Success(data) => Ok(data.data),
+            crate::client::Response::Error(err) => Err(NovuError::UnexpectedResponse {
+                msg: err.message,
+                code: err.status_code.to_string(),
+            }),
+            crate::client::Response::Messages(err) => Err(NovuError::UnexpectedResponse {
+                msg: format!("{:?}", err.message),
+                code: err.status_code.to_string(),
+            }),
         }
     }
 
